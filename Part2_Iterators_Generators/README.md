@@ -66,4 +66,33 @@ Key Lessons
 - `combinations_with_replacement(iterable, n)` - returns all combinations of length `n` from `iterable` *with replacement*. In this way, `(1,1)` will be returned, when it would not be returned from `combinations`
 
 ## Context Managers
-TODO
+
+- See [PEP 343](https://peps.python.org/pep-0343/)
+
+### Intro
+- Context managers do 2 things
+    - Open something with the `__enter__` method
+    - Close something when you leave with the `__exit__` method
+- Potential use cases include:
+    - Opening/writing to files
+    - Locking/releasing resources (threading)
+    - Changing/resetting
+        - ex. Change precision then reset once done
+    - Redirecting stdout to a file
+    - Enter/exit
+        - ex. DB transaction -> upon exit, either commit or rollback the transaction
+
+### Context Managers and Iterators
+- Implement both the context manager protocol and the iterator protocol to create an iterator that can also behave like a context manager
+
+### Additional Uses
+- `getcontext()` returns the Context of an object
+    - ex. `decimal.getcontext() = Context(prec=28, rounding=...)`
+- Use `sys.stdout = open(fname, 'w')` to redirect print statements to fname
+- Context managers can be nested to build things like nested lists
+
+### Generators and Context Managers
+- Use a `try ... yield/finally` block to emulate a context manager with a generator
+    - Decorate the generator with `@contextmanager` from `contextlib` to let python implement the context manager protocol
+- Use `ExitStack` from `contextlib` to nest multiple contexts
+    - ex. You want to iterate through several files and don't want to type `with open(fname, 'r') as f` for each file
